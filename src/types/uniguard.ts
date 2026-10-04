@@ -1,5 +1,8 @@
 export type NavTab = 
   | 'overview' 
+  | 'flows'
+  | 'alerts'
+  | 'ingestion'
   | 'traffic' 
   | 'threats' 
   | 'detection' 

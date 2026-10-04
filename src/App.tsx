@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import type { NavTab, ThreatDetection, NetworkTrafficPoint, ReplayStatus } from './types/uniguard';
 import { INITIAL_THREATS, MOCK_TIMESERIES_TRAFFIC, REPLAY_SCENARIOS, SENSOR_METRICS, REGISTERED_MODELS } from './data/mockData';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { OverviewView } from './components/views/OverviewView';
+import { FlowsView } from './components/views/FlowsView';
+import { AlertsView } from './components/views/AlertsView';
+import { IngestionPcapView } from './components/views/IngestionPcapView';
+import { InvestigationModal } from './components/views/InvestigationModal';
+import { ReportModal } from './components/views/ReportModal';
 import { ThreatTableView } from './components/views/ThreatTableView';
 import { ThreatDetailModal } from './components/views/ThreatDetailModal';
 import { ReplayLabView } from './components/views/ReplayLabView';
@@ -22,6 +27,8 @@ export function App() {
   const [isLive, setIsLive] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [investigationTarget, setInvestigationTarget] = useState<{ flowId?: string; alertId?: string } | null>(null);
+  const [reportTarget, setReportTarget] = useState<{ flowId?: string; alertId?: string } | null>(null);
 
   // Fetch real backend detection data if backend API is running
   useEffect(() => {
@@ -250,6 +257,29 @@ export function App() {
                 models={REGISTERED_MODELS}
                 onSelectThreat={setSelectedThreat}
                 onNavigateToTab={setActiveTab}
+                onInvestigateFlow={(flowId) => setInvestigationTarget({ flowId })}
+                onInvestigateAlert={(alertId) => setInvestigationTarget({ alertId })}
+              />
+            )}
+
+            {activeTab === 'flows' && (
+              <FlowsView
+                onInvestigateFlow={(flowId) => setInvestigationTarget({ flowId })}
+                onReportFlow={(flowId) => setReportTarget({ flowId })}
+              />
+            )}
+
+            {activeTab === 'alerts' && (
+              <AlertsView
+                onInvestigateAlert={(alertId) => setInvestigationTarget({ alertId })}
+                onReportAlert={(alertId) => setReportTarget({ alertId })}
+                onInvestigateFlow={(flowId) => setInvestigationTarget({ flowId })}
+              />
+            )}
+
+            {activeTab === 'ingestion' && (
+              <IngestionPcapView
+                onNavigateToFlows={() => setActiveTab('flows')}
               />
             )}
 
@@ -308,6 +338,32 @@ export function App() {
         onClose={() => setSelectedThreat(null)}
         onStatusChange={handleThreatStatusChange}
       />
+
+      {/* Deep-Dive Investigation Modal */}
+      {investigationTarget && (
+        <InvestigationModal
+          flowId={investigationTarget.flowId}
+          alertId={investigationTarget.alertId}
+          onClose={() => setInvestigationTarget(null)}
+          onOpenReport={(subject) => {
+            setInvestigationTarget(null);
+            setReportTarget(subject);
+          }}
+        />
+      )}
+
+      {/* Incident Report Modal */}
+      {reportTarget && (
+        <ReportModal
+          flowId={reportTarget.flowId}
+          alertId={reportTarget.alertId}
+          onClose={() => setReportTarget(null)}
+          onOpenInvestigation={(subject) => {
+            setReportTarget(null);
+            setInvestigationTarget(subject);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Settings, Key, Bell, Shield, Save, Check } from 'lucide-react';
+import { Save, Check } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
   const [webhookUrl, setWebhookUrl] = useState('');
   const [syslogHost, setSyslogHost] = useState('10.24.0.50:514');
-  const [apiKey, setApiKey] = useState('ug_live_9f83a21bc9048e77412a');
+  const [apiKey] = useState('ug_live_9f83a21bc9048e77412a');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const handleSave = () => {

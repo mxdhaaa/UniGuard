@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: uniguard-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: uniguard
+      POSTGRES_PASSWORD: uniguard_dev_secret
+      POSTGRES_DB: uniguard
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uniguard -d uniguard"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: uniguard-backend
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: production
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      DATABASE_URL: postgresql+psycopg://uniguard:uniguard_dev_secret@db:5432/uniguard
+      CORS_ORIGINS: http://localhost,http://localhost:80,http://127.0.0.1,http://127.0.0.1:80
+      LOG_LEVEL: INFO
+      ENABLE_DOCS: "true"
+      PCAP_UPLOAD_DIR: /app/pcap_uploads
+      PCAP_MAX_FILE_SIZE_MB: 50
+    volumes:
+      - pcap_storage:/app/pcap_uploads
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: uniguard-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:80/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres_data:
+  pcap_storage:

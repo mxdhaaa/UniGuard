@@ -1,0 +1,152 @@
+{
+  "model_name": "UniGuardML",
+  "model_version": "0.1.0",
+  "feature_schema_version": "1.0",
+  "feature_names": [
+    "flow_duration",
+    "packet_count",
+    "byte_count",
+    "packets_per_second",
+    "bytes_per_second",
+    "average_packet_size",
+    "packet_size_std",
+    "unique_destination_count",
+    "unique_destination_port_count",
+    "destination_port_entropy",
+    "packet_size_entropy",
+    "burst_score",
+    "source_activity_rate",
+    "destination_diversity",
+    "port_diversity",
+    "protocol_indicator"
+  ],
+  "classes": [
+    "BOTNET_LIKE",
+    "DOS_LIKE",
+    "EXFILTRATION_LIKE",
+    "NORMAL",
+    "OTHER_SUSPICIOUS",
+    "SCANNING_LIKE"
+  ],
+  "random_seed": 42,
+  "training_source": "synthetic_demo_data_DemoService",
+  "training_sample_count": 1200,
+  "class_distribution": {
+    "NORMAL": 200,
+    "SCANNING_LIKE": 200,
+    "DOS_LIKE": 200,
+    "BOTNET_LIKE": 200,
+    "EXFILTRATION_LIKE": 200,
+    "OTHER_SUSPICIOUS": 200
+  },
+  "validation_metrics": {
+    "accuracy": 1.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0,
+    "weighted_precision": 1.0,
+    "weighted_recall": 1.0,
+    "weighted_f1": 1.0,
+    "confusion_matrix": [
+      [
+        200,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        200,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        200,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        200,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        200,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        200
+      ]
+    ],
+    "per_class_metrics": {
+      "BOTNET_LIKE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "DOS_LIKE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "EXFILTRATION_LIKE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "NORMAL": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "OTHER_SUSPICIOUS": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "SCANNING_LIKE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "train_samples": 1200,
+    "val_samples": 1200,
+    "samples_per_class": {
+      "NORMAL": 200,
+      "SCANNING_LIKE": 200,
+      "DOS_LIKE": 200,
+      "BOTNET_LIKE": 200,
+      "EXFILTRATION_LIKE": 200,
+      "OTHER_SUSPICIOUS": 200
+    }
+  },
+  "isolation_forest_configuration": {
+    "n_estimators": 100,
+    "contamination": 0.1,
+    "random_state": 42,
+    "training_class": "NORMAL_only",
+    "training_samples": 200
+  },
+  "created_at": "2026-10-04T07:04:28+00:00",
+  "readiness_state": "READY"
+}

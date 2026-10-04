@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node dependencies and build
 node_modules
 dist
 dist-ssr
@@ -23,7 +24,34 @@ dist-ssr
 *.sln
 *.sw?
 
-# Python cache
+# Python cache & virtualenvs
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
 
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+!backend/.env.example
+
+# Local SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# PCAP Uploads and temporary directories
+pcap_uploads/
+tmp/
+temp/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/

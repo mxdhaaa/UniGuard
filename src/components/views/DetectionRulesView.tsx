@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, CheckCircle2, Shield, AlertCircle, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 
 export const DetectionRulesView: React.FC = () => {
   const [beaconJitterThreshold, setBeaconJitterThreshold] = useState<number>(0.05);

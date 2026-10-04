@@ -21,12 +21,15 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, activeThreatCount }) => {
   const navItems: { id: NavTab; label: string; icon: React.ElementType; badge?: number }[] = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'traffic', label: 'Traffic', icon: Activity },
-    { id: 'threats', label: 'Threats', icon: ShieldAlert, badge: activeThreatCount },
-    { id: 'detection', label: 'Detection', icon: Sliders },
-    { id: 'models', label: 'Models', icon: Cpu },
+    { id: 'flows', label: 'Network Flows', icon: Activity },
+    { id: 'alerts', label: 'SOC Alerts', icon: ShieldAlert, badge: activeThreatCount },
+    { id: 'ingestion', label: 'PCAP & Ingestion', icon: Server },
+    { id: 'traffic', label: 'Live Telemetry', icon: PlayCircle },
+    { id: 'threats', label: 'Threat Incidents', icon: ShieldCheck },
+    { id: 'detection', label: 'Detection Rules', icon: Sliders },
+    { id: 'models', label: 'ML Models', icon: Cpu },
     { id: 'replay-lab', label: 'Replay Lab', icon: PlayCircle },
-    { id: 'system', label: 'System', icon: Server },
+    { id: 'system', label: 'Sensor System', icon: Server },
   ];
 
   return (
