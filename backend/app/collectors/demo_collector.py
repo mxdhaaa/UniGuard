@@ -88,7 +88,7 @@ class DemoTrafficCollector:
         iats = [round(self._rng.uniform(0.05, 0.45), 4) for _ in range(packet_count - 1)]
         duration = round(sum(iats), 4) if iats else 0.1
 
-        t0 = 1000.0 + self._flow_counter
+        t0 = datetime.now(timezone.utc).timestamp() + self._flow_counter
         timestamps = [t0]
         curr = t0
         for gap in iats:
@@ -123,7 +123,7 @@ class DemoTrafficCollector:
         iats = [0.01] if packet_count > 1 else []
         duration = 0.01 if packet_count > 1 else 0.001
 
-        t0 = 2000.0 + self._flow_counter * 0.02
+        t0 = datetime.now(timezone.utc).timestamp() + self._flow_counter * 0.02
         timestamps = [t0] if packet_count == 1 else [t0, t0 + 0.01]
 
         self._flow_counter += 1
@@ -156,7 +156,7 @@ class DemoTrafficCollector:
         iats = [base_iat] * (packet_count - 1)
         duration = round(sum(iats), 6)
 
-        t0 = 3000.0 + self._flow_counter
+        t0 = datetime.now(timezone.utc).timestamp() + self._flow_counter
         timestamps = [t0 + i * base_iat for i in range(packet_count)]
 
         self._flow_counter += 1
@@ -191,7 +191,7 @@ class DemoTrafficCollector:
         iats = [round(base_period + self._rng.uniform(-0.003, 0.003), 4) for _ in range(packet_count - 1)]
         duration = round(sum(iats), 4)
 
-        t0 = 4000.0 + self._flow_counter
+        t0 = datetime.now(timezone.utc).timestamp() + self._flow_counter
         timestamps = [t0]
         curr = t0
         for gap in iats:
@@ -227,7 +227,7 @@ class DemoTrafficCollector:
         iats = [round(self._rng.uniform(0.01, 0.05), 4) for _ in range(packet_count - 1)]
         duration = round(sum(iats), 4)
 
-        t0 = 5000.0 + self._flow_counter
+        t0 = datetime.now(timezone.utc).timestamp() + self._flow_counter
         timestamps = [t0]
         curr = t0
         for gap in iats:
@@ -264,7 +264,7 @@ class DemoTrafficCollector:
         iats = [round(self._rng.expovariate(2.0), 4) for _ in range(packet_count - 1)]
         duration = round(sum(iats), 4)
 
-        t0 = 6000.0 + self._flow_counter
+        t0 = datetime.now(timezone.utc).timestamp() + self._flow_counter
         timestamps = [t0]
         curr = t0
         for gap in iats:
@@ -329,3 +329,6 @@ class DemoTrafficCollector:
 
         chosen_profiles = self._rng.choices(profiles, weights=weights, k=count)
         return [self.generate_flow_by_profile(p) for p in chosen_profiles]
+
+
+

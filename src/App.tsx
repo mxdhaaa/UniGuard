@@ -18,6 +18,7 @@ import { ModelsView } from './components/views/ModelsView';
 import { SystemView } from './components/views/SystemView';
 import { SettingsView } from './components/views/SettingsView';
 import { ShieldAlert, X } from 'lucide-react';
+import { uniguardApi } from './api/client';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
@@ -206,7 +207,18 @@ export function App() {
     setToastMessage(`Threat ${id} status updated to ${newStatus}.`);
   };
 
-  const activeThreatsCount = threats.filter((t) => t.status === 'ACTIVE' || t.status === 'INVESTIGATING').length;
+  const [activeThreatsCount, setActiveThreatsCount] = useState<number>(0);
+  useEffect(() => {
+    async function fetchAlertCount() {
+      try {
+        const response = await uniguardApi.getAlerts({ page: 1, page_size: 1 });
+        setActiveThreatsCount(response.meta.total_items);
+      } catch {
+        setActiveThreatsCount(0);
+      }
+    }
+    fetchAlertCount();
+  }, []);
 
   return (
     <div className="flex h-screen bg-[#F7F8FA] text-slate-900 overflow-hidden font-sans">
@@ -369,3 +381,5 @@ export function App() {
 }
 
 export default App;
+
+

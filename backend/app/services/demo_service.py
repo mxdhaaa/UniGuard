@@ -17,6 +17,11 @@ from backend.app.collectors.demo_collector import (
 )
 from backend.app.core.feature_engine import FeatureEngine
 from backend.app.core.preprocessing import FeaturePreprocessor
+from backend.app.ml.inference import run_inference
+from backend.app.core.risk_engine import risk_engine
+from backend.app.core.evidence_engine import evidence_engine
+from backend.app.services.persistence_service import persistence_service
+from backend.app.db.database import SessionLocal
 
 
 class DemoService:
@@ -102,27 +107,37 @@ class DemoService:
         flows = self._collector.generate_batch(count=count, profile_mix=mix)
 
         results: List[DemoResultItem] = []
-        for flow in flows:
-            # 2. Extract features using the entire batch as context flows for diversity metrics
-            features = FeatureEngine.extract_features(flow, context_flows=flows)
-
-            # 3. Preprocess features into standardized bounded numeric vector
-            preprocessed = FeaturePreprocessor.preprocess(features)
-
-            profile_label = flow.metadata.get("simulated_profile", "UNKNOWN")
-
-            results.append(
-                DemoResultItem(
-                    flow=flow,
-                    features=features,
-                    preprocessed=preprocessed,
-                    simulated_profile=profile_label,
+        db = SessionLocal()
+        try:
+            for flow in flows:
+                features = FeatureEngine.extract_features(flow, context_flows=flows)
+                ml_result = run_inference(flow)
+                risk = risk_engine.assess(ml_result)
+                evidence = evidence_engine.assess(flow, ml_result, risk)
+                persistence_service.save_analysis_result(
+                    db,
+                    flow,
+                    features,
+                    ml_result,
+                    risk,
+                    evidence,
                 )
-            )
-
+                preprocessed = FeaturePreprocessor.preprocess(features)
+                profile_label = flow.metadata.get("simulated_profile", "UNKNOWN")
+                results.append(
+                    DemoResultItem(
+                        flow=flow,
+                        features=features,
+                        preprocessed=preprocessed,
+                        simulated_profile=profile_label,
+                    )
+                )
+        finally:
+            db.close()
         self.generated_flows_count += len(results)
         return results
 
 
 # Global singleton instance for application session
 demo_service = DemoService()
+

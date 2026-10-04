@@ -236,7 +236,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                       Classification
                     </span>
                     <span className="font-mono text-xs font-bold text-slate-900">
-                      {Math.round((report.classification?.confidence ?? 0) * 100)}% Conf
+                      {Math.round((report.classification?.classifier_confidence ?? 0) * 100)}% Conf
                     </span>
                   </div>
                   <div>
@@ -247,7 +247,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                   </div>
                   {report.classification?.probabilities && (
                     <div className="space-y-1 pt-1 border-t border-slate-100 text-[11px]">
-                      {Object.entries(report.classification.probabilities).map(([k, v]) => (
+                      {Object.entries(report.classification.class_probabilities).map(([k, v]) => (
                         <div key={k} className="flex justify-between items-center text-slate-600">
                           <span className="font-mono text-[10px]">{k}</span>
                           <span className="font-mono font-semibold">{(Number(v) * 100).toFixed(1)}%</span>
@@ -269,7 +269,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                   <div>
                     <div className="text-xs text-slate-400">Risk Score</div>
                     <div className="font-bold text-slate-900 font-mono text-lg mt-0.5">
-                      {report.risk?.score !== undefined ? `${report.risk.score}/100` : 'N/A'}
+                      {report.risk?.risk_score !== undefined ? `${report.risk.risk_score}/100` : 'N/A'}
                     </div>
                   </div>
                   {report.risk?.components && (
@@ -302,7 +302,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                   <div>
                     <div className="text-xs text-slate-400">Anomaly Score</div>
                     <div className="font-bold text-slate-900 font-mono text-lg mt-0.5">
-                      {report.anomaly?.score !== undefined ? Number(report.anomaly.score).toFixed(4) : 'N/A'}
+                      {report.anomaly?.anomaly_score !== undefined ? Number(report.anomaly.anomaly_score).toFixed(4) : 'N/A'}
                     </div>
                   </div>
                   <div className="text-[11px] text-slate-500 pt-1 border-t border-slate-100">
@@ -415,3 +415,5 @@ export const ReportModal: React.FC<ReportModalProps> = ({
     </div>
   );
 };
+
+
